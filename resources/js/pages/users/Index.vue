@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, Link, usePage, router } from '@inertiajs/vue3';
-import { type BreadcrumbItem, type PageNumber } from '@/types';
+import type {  BreadcrumbItem,  PageNumber,  UsersPageProps } from '@/types';
 import { useUserStore } from '@/stores/userStore';
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -9,8 +9,10 @@ const breadcrumbItems: BreadcrumbItem[] = [
     { title: 'Users', href: '/users' },
 ];
 
-const page = usePage();
+// const page = usePage();
 const store = useUserStore();
+const page = usePage<UsersPageProps>();
+
 
 store.setUsers(page.props.users);
 
@@ -63,7 +65,7 @@ function goTo(pageNumber: PageNumber) {
                 v-for="link in store.pagination.links"
                 :key="link.label"
                 :disabled="!link.url"
-                @click="link.url && goTo(link.url.split('page=')[1])"
+                @click="link.url && goTo(Number(link.url.split('page=')[1] ?? 1))"
                 v-html="link.label"
                 class="px-3 py-1 border rounded bg-gray-700 text-white hover:bg-gray-600 disabled:opacity-50 transition-colors"
             />

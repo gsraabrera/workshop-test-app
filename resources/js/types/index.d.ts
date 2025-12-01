@@ -40,7 +40,16 @@ export interface Pagination {
     current_page: number;
     last_page: number;
     total: number;
-    links: any[];
+    per_page: number;
+    links: Array<{
+        url: string | null;
+        label: string;
+        active: boolean;
+    }>;
+}
+
+export interface UsersPageProps extends AppPageProps {
+    users: { data: User[] } & Pagination;
 }
 
 export type PageNumber = number;
