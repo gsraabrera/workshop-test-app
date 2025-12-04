@@ -11,15 +11,19 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+// Route::get('dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->name('dashboard');
 
 Route::get('users', function () {
     return Inertia::render('users/Index', [
         'users' => User::paginate(10),
     ]);
-})->middleware(['auth', 'verified'])->name('users.index');
+})->name('users.index');
 
 
 require __DIR__.'/settings.php';

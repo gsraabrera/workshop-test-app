@@ -3,6 +3,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useInitials } from '@/composables/useInitials';
 import type { User } from '@/types';
 import { computed } from 'vue';
+import { useAuthStore } from '@/stores/authStore';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const auth = useAuthStore();
+
+if (auth.token) {
+  console.log('User is logged in')
+  console.log('User info:', auth.user.first_name)  
+} else {
+    router.push('/dashboard');
+}
 
 interface Props {
     user: User;
@@ -23,16 +35,18 @@ const showAvatar = computed(
 
 <template>
     <Avatar class="h-8 w-8 overflow-hidden rounded-lg">
-        <AvatarImage v-if="showAvatar" :src="user.avatar!" :alt="user.name" />
+        <!-- <AvatarImage v-if="showAvatar" :src="user.avatar!" :alt="user.name" /> -->
         <AvatarFallback class="rounded-lg text-black dark:text-white">
-            {{ getInitials(user.name) }}
+            <!-- {{ getInitials(user.name) }} -->
+            <!-- {{ getInitials(user.first_name + ' ' + user.last_name) }} -->
+              {{ getInitials(auth.user.first_name + ' ' + auth.user.last_name) }}
         </AvatarFallback>
     </Avatar>
 
     <div class="grid flex-1 text-left text-sm leading-tight">
-        <span class="truncate font-medium">{{ user.name }}</span>
-        <span v-if="showEmail" class="truncate text-xs text-muted-foreground">{{
-            user.email
-        }}</span>
+        <span class="truncate font-medium">{{ auth.user.first_name }} {{  auth.user.middle_name }} {{ auth.user.last_name }}</span>
+        <span v-if="showEmail" class="truncate text-xs text-muted-foreground">
+            {{ auth.user.email }}
+        </span>
     </div>
 </template>

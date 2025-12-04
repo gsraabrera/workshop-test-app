@@ -126,4 +126,39 @@ return [
         'table' => 'failed_jobs',
     ],
 
+
+    'rabbitmq' => [
+
+        'driver' => 'rabbitmq',
+        'queue' => env('RABBITMQ_QUEUE', 'default'),
+
+        'connection' => PhpAmqpLib\Connection\AMQPLazyConnection::class,
+
+        'host' => env('RABBITMQ_HOST', '127.0.0.1'),
+        'port' => env('RABBITMQ_PORT', 5672),
+        'user' => env('RABBITMQ_USER', 'guest'),
+        'password' => env('RABBITMQ_PASSWORD', 'guest'),
+        'vhost' => env('RABBITMQ_VHOST', '/'),
+        
+        'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE', 'topic'),
+        'exhange' => env('RABBITMQ_EXCHANGE', null),
+        'ssl_params' => [
+            'verify_peer' => env('RABBITMQ_SSL_VERIFY_PEER', true),
+        ],
+        
+        // 'options' => [
+        //     'exchange' => [
+        //         'name' => env('RABBITMQ_EXCHANGE', 'app.exchange'),
+        //         'type' => 'direct',
+        //         'declare' => true,
+        //     ],
+
+        //     'queue' => [
+        //         'declare' => true,
+        //         'bind' => true,
+        //     ],
+        // ],
+    ],
+
+
 ];
