@@ -11,6 +11,8 @@ import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
 import { LogOut, Settings } from 'lucide-vue-next';
+import { useAuthStore } from '@/stores/authStore';
+const auth = useAuthStore();
 
 interface Props {
     user: User;
@@ -18,6 +20,7 @@ interface Props {
 
 const handleLogout = () => {
     router.flushAll();
+    auth.logout();
 };
 
 defineProps<Props>();

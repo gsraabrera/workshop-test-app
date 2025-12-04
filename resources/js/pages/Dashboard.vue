@@ -4,6 +4,11 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
+import { useAuthStore } from '@/stores/authStore';
+
+const auth = useAuthStore();
+
+auth.guard()  
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

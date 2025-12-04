@@ -5,6 +5,12 @@ namespace App\Http\Controllers\API\V1;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
+use App\Jobs\ProcessUserUpdate;
+// use App\Actions\Fortify\PasswordValidationRules;
 
 class UserController extends Controller
 {
@@ -22,7 +28,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+
+
     }
 
     /**
@@ -30,7 +37,29 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+
+        Validator::make($input, [
+            'last_name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique(User::class),
+            ],
+            'password' => ['required', 'string', Password::default(), 'confirmed'],
+        ])->validate();
+
+        $user = User::create([
+            'first_name'  => $input['first_name'],
+            'last_name'   => $input['last_name'],
+            'email'       => $input['email'],
+            'password'    => Hash::make($input['password']),
+        ]);
+    
+        return response()->json($user, 201);
     }
 
     /**
@@ -54,7 +83,12 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        // ProcessUserUpdate::dispatch($user);
+        ProcessUserUpdate::dispatch($user->id);
+        return response()->json(['message' => 'User updated. Email queued.']);
     }
 
     /**
